@@ -80,6 +80,12 @@ export function EditorProvider({ children }: PropsWithChildren) {
                     }
                 }
 
+                if (node.type === StructureNodeType.Text) {
+                    if (key === StructureUpdatableKeys.TextContent) {
+                        (node as StructureTextNode).textContent = value as string;
+                    }
+                }
+
                 setNodes([...nodes]);
             });
         }

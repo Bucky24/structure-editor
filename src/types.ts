@@ -6,6 +6,7 @@ export enum StructureNodeType {
 export enum StructureUpdatableKeys {
     Id,
     Direction,
+    TextContent,
 }
 
 export enum StructureDirection {

@@ -1,20 +1,34 @@
 import React, { useContext } from 'react';
-import { StructureBaseNode, StructureContainerNode, StructureNodeType, StructureTextNode } from "./types";
+import { StructureBaseNode, StructureContainerNode, StructureDirection, StructureNodeType, StructureTextNode, StructureUpdatableKeys } from "./types";
 import EditorContext from './EditorContext';
 import classnames from 'classnames';
 
 export default function Node({ node }: { node: StructureBaseNode }) {
-    const { activeNodeId } = useContext(EditorContext);
+    const { activeNodeId, updateNode } = useContext(EditorContext);
 
     let content = null;
-    let styles = {};
+    let styles: { [key: string]: string | number } = {
+        flexGrow: 1,
+    };
 
     if (node.type === StructureNodeType.Container) {
         const constainerNode = node as StructureContainerNode;
         content = constainerNode.children.map(child => <Node key={child.id} node={child} />);
+        styles = {
+            ...styles,
+            display: 'flex',
+            flexDirection: constainerNode.direction === StructureDirection.Row ? 'row' : 'column',
+        };
     } else if (node.type === StructureNodeType.Text) {
         const textNode = node as StructureTextNode;
-        content = <div>{textNode.textContent}</div>
+        content = <textarea
+            style={{ width: '100%', height: '100%', padding: 0 }}
+            onChange={(e) => {
+                const content = e.target.value;
+                updateNode(node.id, StructureUpdatableKeys.TextContent, content);
+            }}
+            value={textNode.textContent}
+        ></textarea>
     }
     return <div
         style={styles}
