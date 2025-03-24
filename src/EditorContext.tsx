@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useState } from 'react';
-import { StructureBaseNode, StructureNodeType, StructureContainerNode, StructureTextNode, StructureUpdatableKeys, StructureDirection } from './types';
+import { StructureBaseNode, StructureNodeType, StructureContainerNode, StructureTextNode, StructureUpdatableKeys, StructureDirection, StructureImageNode } from './types';
 import { getRandomString } from './utils';
 
 const EditorContext = React.createContext<{
@@ -49,6 +49,8 @@ export function EditorProvider({ children }: PropsWithChildren) {
                 newNode = { ...newNode, children: [], direction: StructureDirection.Row } as StructureContainerNode;
             } else if (type === StructureNodeType.Text) {
                 newNode = { ...newNode, textContent: '' } as StructureTextNode;
+            } else if (type === StructureNodeType.Image) {
+                newNode = { ...newNode, src: '' } as StructureImageNode;
             }
 
             if (activeNodeId) {
@@ -83,6 +85,16 @@ export function EditorProvider({ children }: PropsWithChildren) {
                 if (node.type === StructureNodeType.Text) {
                     if (key === StructureUpdatableKeys.TextContent) {
                         (node as StructureTextNode).textContent = value as string;
+                    }
+                }
+
+                if (node.type === StructureNodeType.Image) {
+                    if (key === StructureUpdatableKeys.Width) {
+                        (node as StructureImageNode).width = value as number;
+                    } else if (key === StructureUpdatableKeys.Height) {
+                        (node as StructureImageNode).height = value as number;
+                    } else if (key === StructureUpdatableKeys.Src) {
+                        (node as StructureImageNode).src = value as string;
                     }
                 }
 

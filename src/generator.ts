@@ -1,4 +1,4 @@
-import { StructureBaseNode, StructureContainerNode, StructureDirection, StructureNodeType, StructureTextNode } from "./types";
+import { StructureBaseNode, StructureContainerNode, StructureDirection, StructureImageNode, StructureNodeType, StructureTextNode } from "./types";
 
 export default function generator(nodes: StructureBaseNode[]): string {
     console.log(nodes);
@@ -6,34 +6,58 @@ export default function generator(nodes: StructureBaseNode[]): string {
         const generated = generateNode(node);
         console.log(node, generated);
         return generated;
-    }).join('');   
+    }).join('');
 }
 
-function generateNode(node: StructureBaseNode): string {
+function indent(indents: number): string {
+    let result = "";
+    for (let i=0;i<indents;i++) {
+        result += "\t";
+    }
+
+    return result;
+}
+
+function generateNode(node: StructureBaseNode, indents: number = 0): string {
+    const inStr = indent(indents);
     if (node.type === StructureNodeType.Container) {
         const containerNode = node as StructureContainerNode;
-        let result = '<table><tbody>';
+        let result = `${inStr}<table>\n${inStr}\t<tbody>\n`;
 
         if (containerNode.direction === StructureDirection.Row) {
-            result += "<tr>";
+            result += `${inStr}\t\t<tr>\n`;
 
             for (const child of containerNode.children) {
-                result += "<td>" + generateNode(child) + "</td>";
+                result += `${inStr}\t\t\t<td>\n${generateNode(child, indents + 4)}\n${inStr}\t\t\t</td>\n`;
             }
 
-            result += "</tr>";
+            result += `${inStr}\t\t</tr>\n`;
         } else if (containerNode.direction === StructureDirection.Column) {
             for (const child of containerNode.children) {
-                result += "<tr><td>" + generateNode(child) + "</td></tr>";
+                result += `${inStr}\t\t<tr>\n${inStr}\t\t\t<td>\n${generateNode(child, indents + 4)}\n${inStr}\t\t\t</td>${inStr}\t\t</tr>\n`;
             }
         }
 
-        result += "</tbody></table>";
+        result += `${inStr}\t</tbody>\n${inStr}</table>`;
 
         return result;
     } else if (node.type === StructureNodeType.Text) {
         const textNode = node as StructureTextNode;
-        return "<span>" + textNode.textContent + "</span>";
+        return `${inStr}<span>${textNode.textContent}</span>`;
+    } else if (node.type === StructureNodeType.Image) {
+        const imageNode = node as StructureImageNode;
+        let result = `${inStr}<img src="${imageNode.src}" `;
+
+        if (imageNode.width !== undefined && imageNode.width !== null) {
+            result += `width="${imageNode.width}px" `;
+        }
+        if (imageNode.height !== undefined && imageNode.height !== null) {
+            result += `height="${imageNode.height}px" `;
+        }
+
+        result += "/>";
+
+        return result;
     } else {
         console.error(`Unknown node type ${node.type}`);
     }

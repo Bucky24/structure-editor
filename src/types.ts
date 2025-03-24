@@ -1,12 +1,16 @@
 export enum StructureNodeType {
     Text,
     Container,
+    Image,
 }
 
 export enum StructureUpdatableKeys {
     Id,
     Direction,
     TextContent,
+    Width,
+    Height,
+    Src,
 }
 
 export enum StructureDirection {
@@ -28,4 +32,11 @@ export interface StructureContainerNode extends StructureBaseNode {
     type: StructureNodeType.Container;
     children: StructureBaseNode[];
     direction: StructureDirection;
+}
+
+export interface StructureImageNode extends StructureBaseNode {
+    type: StructureNodeType.Image;
+    width?: number;
+    height?: number;
+    src: string;
 }

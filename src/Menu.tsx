@@ -16,6 +16,11 @@ export default function Menu({ onSave }: { onSave: () => void }) {
         }}>
             Create Text Node
         </button>
+        <button onClick={() => {
+            createNode(StructureNodeType.Image);
+        }}>
+            Create Image Node
+        </button>
         <button onClick={onSave}>
             Save
         </button>

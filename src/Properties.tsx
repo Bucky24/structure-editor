@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import EditorContext from './EditorContext';
-import { StructureBaseNode, StructureContainerNode, StructureDirection, StructureNodeType, StructureUpdatableKeys } from './types';
+import { StructureBaseNode, StructureContainerNode, StructureDirection, StructureImageNode, StructureNodeType, StructureUpdatableKeys } from './types';
 import TextField from './TextField';
 
 export default function Properties() {
@@ -55,6 +55,38 @@ export default function Properties() {
                                 <option value={StructureDirection.Row}>Row</option>
                                 <option value={StructureDirection.Column}>Column</option>
                             </select>
+                        </td>
+                    </tr>
+                </>}
+                {activeNode.type === StructureNodeType.Image && <>
+                    <tr>
+                        <td>
+                            Width
+                        </td>
+                        <td>
+                            <TextField value={(activeNode as StructureImageNode).width || ''} onChange={(value: string) => {
+                                updateNode(activeNode.id, StructureUpdatableKeys.Width, parseInt(value));
+                            }} />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Height
+                        </td>
+                        <td>
+                            <TextField value={(activeNode as StructureImageNode).height || ''} onChange={(value: string) => {
+                                updateNode(activeNode.id, StructureUpdatableKeys.Height, parseInt(value));
+                            }} />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Source
+                        </td>
+                        <td>
+                            <TextField value={(activeNode as StructureImageNode).src} onChange={(value: string) => {
+                                updateNode(activeNode.id, StructureUpdatableKeys.Src, value);
+                            }} />
                         </td>
                     </tr>
                 </>}

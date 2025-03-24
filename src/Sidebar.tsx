@@ -30,6 +30,8 @@ export default function Sidebar() {
                 </div>;
             case StructureNodeType.Text:
                 return <div {...basicProps}>{node.id} (Text Node)</div>;
+            case StructureNodeType.Image:
+                return <div {...basicProps}>{node.id} (Image Node)</div>;
             default:
                 return <div {...basicProps}>{node.id} (Unknown - {node.type})</div>;
         }

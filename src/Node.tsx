@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { StructureBaseNode, StructureContainerNode, StructureDirection, StructureNodeType, StructureTextNode, StructureUpdatableKeys } from "./types";
+import { StructureBaseNode, StructureContainerNode, StructureDirection, StructureImageNode, StructureNodeType, StructureTextNode, StructureUpdatableKeys } from "./types";
 import EditorContext from './EditorContext';
 import classnames from 'classnames';
 
@@ -28,7 +28,20 @@ export default function Node({ node }: { node: StructureBaseNode }) {
                 updateNode(node.id, StructureUpdatableKeys.TextContent, content);
             }}
             value={textNode.textContent}
-        ></textarea>
+        ></textarea>;
+    } else if (node.type === StructureNodeType.Image) {
+        const imageNode = node as StructureImageNode;
+        content = <img
+            style={{
+                width: imageNode.width ?? `${imageNode.width}px`,
+                height: imageNode.height ?? `${imageNode.height}px`,
+            }}
+            src={imageNode.src}
+        />;
+        styles.flexGrow = 0;
+        styles.flexShrink = 0;
+    } else {
+        content = <div style={{ width: '100%', height: '100%', padding: 0 }}>Unknown type</div>
     }
     return <div
         style={styles}
