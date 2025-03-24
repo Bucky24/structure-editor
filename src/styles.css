@@ -1,0 +1,11 @@
+.sidebar_item {
+    cursor: pointer;
+}
+
+.sidebar_item.active {
+    outline: solid red;
+}
+
+.node_item.active {
+    outline: solid red;
+}

@@ -1,18 +1,37 @@
 import React, { ReactElement, useContext } from 'react';
 import EditorContext from './EditorContext';
-import { StructureBaseNode, StructureNodeType } from './types';
-
+import { StructureBaseNode, StructureContainerNode, StructureNodeType } from './types';
 export default function Sidebar() {
-    const { nodes } = useContext(EditorContext);
+    const { nodes, setActiveNodeId, activeNodeId } = useContext(EditorContext);
 
-    const getNodeElement = (node: StructureBaseNode): ReactElement => {
+    const getNodeElement = (node: StructureBaseNode, indent: number = 0): ReactElement => {
+        const basicProps = {
+            key: node.id,
+            className: 'sidebar_item',
+            onClick: () => {
+                setActiveNodeId(node.id);
+            },
+            style: {
+                marginLeft: indent * 5,
+            },
+        }
+
+        if (activeNodeId === node.id) {
+            basicProps.className += " active";
+        }
+
         switch (node.type) {
             case StructureNodeType.Container:
-                return <div key={node.id}>{node.id} (Container Node)</div>;
+                return <div>
+                    <div {...basicProps}>{node.id} (Container Node)</div>
+                    {(node as StructureContainerNode).children.map((child) => {
+                        return getNodeElement(child, indent + 1);
+                    })}
+                </div>;
             case StructureNodeType.Text:
-                return <div key={node.id}>{node.id} (Text Node)</div>;
+                return <div {...basicProps}>{node.id} (Text Node)</div>;
             default:
-                return <div key={node.id}>{node.id} (Unknown - {node.type})</div>;
+                return <div {...basicProps}>{node.id} (Unknown - {node.type})</div>;
         }
     }
 
@@ -22,6 +41,9 @@ export default function Sidebar() {
         borderLeft: 'none',
         height: 'calc(100% - 20px)',
     }}>
+        <div onClick={() => {
+            setActiveNodeId(null);
+        }}>Main</div>
         {nodes.map((node) => {
             return getNodeElement(node);
         })}

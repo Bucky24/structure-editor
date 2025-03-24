@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StructureBaseNode, StructureContainerNode, StructureNodeType, StructureTextNode } from "./types";
+import EditorContext from './EditorContext';
+import classnames from 'classnames';
 
 export default function Node({ node }: { node: StructureBaseNode }) {
+    const { activeNodeId } = useContext(EditorContext);
+
     let content = null;
     let styles = {};
 
@@ -12,7 +16,13 @@ export default function Node({ node }: { node: StructureBaseNode }) {
         const textNode = node as StructureTextNode;
         content = <div>{textNode.textContent}</div>
     }
-    return <div style={styles}>
+    return <div
+        style={styles}
+        className={classnames(
+            'node_item',
+            activeNodeId === node.id && 'active',
+        )}
+    >
         {content}
     </div>
 }

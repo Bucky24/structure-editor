@@ -3,6 +3,9 @@ import Editor from './Editor';
 import { EditorProvider } from './EditorContext';
 import Menu from './Menu';
 import Sidebar from './Sidebar';
+import Properties from './Properties';
+
+import './styles.css';
 
 export default function EditorWrapper() {
     return <div style={{
@@ -22,6 +25,14 @@ export default function EditorWrapper() {
                 flexDirection: 'row',
                 flexGrow: 1,
             }}>
+                <div style={{
+                    flexShrink: 0,
+                    flexGrow: 0,
+                    flexBasis: 200,
+                    height: '100%',
+                }}>
+                    <Properties />
+                </div>
                 <div style={{
                     flexGrow: 1,
                     height: '100%',
