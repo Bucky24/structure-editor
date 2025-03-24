@@ -1,2 +1,2 @@
-export * from './EditorWrapper';
-export { default as Editor } from './EditorWrapper';
+export * from './WrappedEditor';
+export { default as Editor } from './WrappedEditor';

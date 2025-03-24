@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import EditorContext from './EditorContext';
 import { StructureNodeType } from './types';
 
-export default function Menu() {
+export default function Menu({ onSave }: { onSave: () => void }) {
     const { createNode } = useContext(EditorContext);
 
     return <div>
@@ -15,6 +15,9 @@ export default function Menu() {
             createNode(StructureNodeType.Text);
         }}>
             Create Text Node
+        </button>
+        <button onClick={onSave}>
+            Save
         </button>
     </div>
 }
