@@ -11,6 +11,10 @@ export enum StructureUpdatableKeys {
     Width,
     Height,
     Src,
+    Classes,
+    Styles,
+    ParentClasses,
+    ParentStyles,
 }
 
 export enum StructureDirection {
@@ -21,6 +25,10 @@ export enum StructureDirection {
 export interface StructureBaseNode {
     type: StructureNodeType;
     id: string;
+    extraClasses?: string;
+    extraStyles?: string;
+    parentClasses?: string;
+    parentStyles?: string;
 }
 
 export interface StructureTextNode extends StructureBaseNode {

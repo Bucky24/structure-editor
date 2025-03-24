@@ -90,6 +90,46 @@ export default function Properties() {
                         </td>
                     </tr>
                 </>}
+                <tr>
+                    <td>
+                        Classes
+                    </td>
+                    <td>
+                        <TextField value={activeNode.extraClasses ?? ''} onChange={(value: string) => {
+                            updateNode(activeNode.id, StructureUpdatableKeys.Classes, value);
+                        }} />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Styles
+                    </td>
+                    <td>
+                        <TextField value={activeNode.extraStyles ?? ''} onChange={(value: string) => {
+                            updateNode(activeNode.id, StructureUpdatableKeys.Styles, value);
+                        }} />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Parent Classes
+                    </td>
+                    <td>
+                        <TextField value={activeNode.parentClasses ?? ''} onChange={(value: string) => {
+                            updateNode(activeNode.id, StructureUpdatableKeys.ParentClasses, value);
+                        }} />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Parent Styles
+                    </td>
+                    <td>
+                        <TextField value={activeNode.parentStyles ?? ''} onChange={(value: string) => {
+                            updateNode(activeNode.id, StructureUpdatableKeys.ParentStyles, value);
+                        }} />
+                    </td>
+                </tr>
             </tbody>
         </table>}
     </div>

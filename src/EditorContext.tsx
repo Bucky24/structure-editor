@@ -74,6 +74,14 @@ export function EditorProvider({ children }: PropsWithChildren) {
             applyToNode(nodes, id, (node: StructureBaseNode) => {
                 if (key === StructureUpdatableKeys.Id) {
                     node.id = value as string;
+                } else if (key === StructureUpdatableKeys.Classes) {
+                    node.extraClasses = value as string;
+                } else if (key === StructureUpdatableKeys.Styles) {
+                    node.extraStyles = value as string;
+                } else if (key === StructureUpdatableKeys.ParentClasses) {
+                    node.parentClasses = value as string;
+                } else if (key === StructureUpdatableKeys.ParentStyles) {
+                    node.parentStyles = value as string;
                 }
                 
                 if (node.type === StructureNodeType.Container) {
