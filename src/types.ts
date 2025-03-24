@@ -48,3 +48,8 @@ export interface StructureImageNode extends StructureBaseNode {
     height?: number;
     src: string;
 }
+
+export enum StructureSaveType {
+    HTML,
+    JSON,
+}

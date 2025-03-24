@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import EditorContext from './EditorContext';
-import { StructureNodeType } from './types';
+import { StructureNodeType, StructureSaveType } from './types';
 
-export default function Menu({ onSave }: { onSave: () => void }) {
+export default function Menu({ onSave }: { onSave: (type: StructureSaveType) => void }) {
     const { createNode } = useContext(EditorContext);
 
     return <div>
@@ -21,8 +21,11 @@ export default function Menu({ onSave }: { onSave: () => void }) {
         }}>
             Create Image Node
         </button>
-        <button onClick={onSave}>
-            Save
+        <button onClick={() => { onSave(StructureSaveType.HTML)}}>
+            Save HTML
+        </button>
+        <button onClick={() => { onSave(StructureSaveType.JSON)}}>
+            Save JSON
         </button>
     </div>
 }

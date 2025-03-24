@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from 'react';
-import { Editor } from '@bucky24/structure-editor';
+import { Editor, StructureSaveType } from '@bucky24/structure-editor';
 
 import './styles.css';
 
@@ -10,7 +10,7 @@ export default function App(): ReactNode {
         flexDirection: 'column',
         height: '100%',
     }}>
-        <Editor onSave={(content: string) => {
+        <Editor onSave={(type: StructureSaveType, content: string) => {
             setContent(content);
         }} />
         <div style={{

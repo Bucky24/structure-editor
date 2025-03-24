@@ -7,8 +7,9 @@ import Properties from './Properties';
 
 import './styles.css';
 import generator from './generator';
+import { StructureSaveType } from './types';
 
-export default function OuterEditor({ onSave }: { onSave: (content: string) => void | Promise<void> }) {
+export default function OuterEditor({ onSave }: { onSave: (type: StructureSaveType, content: string) => void | Promise<void> }) {
     const { nodes } = useContext(EditorContext);
 
     return <div style={{
@@ -20,11 +21,13 @@ export default function OuterEditor({ onSave }: { onSave: (content: string) => v
             flexShrink: 0,
             flexBasis: 50,
         }}>
-            <Menu onSave={() => {
-                console.log(nodes);
-                // generate now
-                const html = generator(nodes);
-                onSave(html);
+            <Menu onSave={(type: StructureSaveType) => {
+                if (type === StructureSaveType.HTML) {
+                    const html = generator(nodes);
+                    onSave(StructureSaveType.HTML, html);
+                } else if (type === StructureSaveType.JSON) {
+                    onSave(StructureSaveType.JSON, JSON.stringify(nodes, null, 4));
+                }
             }} />
         </div>
         <div style={{
