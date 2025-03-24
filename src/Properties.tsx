@@ -31,6 +31,9 @@ export default function Properties() {
                     </td>
                     <td>
                         <TextField value={activeNode.id || ''} onChange={(value: string) => {
+                            if (value === '') {
+                                value = ' ';
+                            }
                             const oldId = activeNode.id;
                             updateNode(activeNode.id, StructureUpdatableKeys.Id, value);
                             if (activeNodeId === oldId) {

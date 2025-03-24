@@ -1,7 +1,7 @@
-import { StructureBaseNode, StructureContainerNode, StructureDirection, StructureImageNode, StructureNodeType, StructureTextNode } from "./types";
+import { StructureBaseNode, StructureContainerNode, StructureDirection, StructureFillableNode, StructureImageNode, StructureNodeType, StructureTextNode } from "./types";
 
 export default function generator(nodes: StructureBaseNode[]): string {
-    console.log(nodes);
+    //console.log(nodes);
     return nodes.map((node) => {
         const generated = generateNode(node);
         console.log(node, generated);
@@ -61,9 +61,39 @@ function generateNode(node: StructureBaseNode, indents: number = 0): string {
         result += "/>";
 
         return result;
+    } else if (node.type === StructureNodeType.Table) {
+        const fillableNode = node as StructureFillableNode;
+        let result = `${inStr}<table ${extraAttrs}>\n${inStr}\t<tbody>\n`;
+
+        for (const child of fillableNode.children) {
+            result += generateNode(child, indents + 2);
+        }
+
+        result += `${inStr}\t</tbody>\n${inStr}</table>`;
+        return result;
+    } else if (node.type === StructureNodeType.TableRow) {
+        const fillableNode = node as StructureFillableNode;
+        let result = `${inStr}<tr ${extraAttrs}>\n`;
+
+        for (const child of fillableNode.children) {
+            result += generateNode(child, indents + 1);
+        }
+
+        result += `${inStr}</tr>\n`;
+        return result;
+    } else if (node.type === StructureNodeType.TableCell) {
+        const fillableNode = node as StructureFillableNode;
+        let result = `${inStr}<td ${extraAttrs}>\n`;
+
+        for (const child of fillableNode.children) {
+            result += generateNode(child, indents + 1);
+        }
+
+        result += `${inStr}</td>\n`;
+        return result;
     } else {
         console.error(`Unknown node type ${node.type}`);
     }
 
-    return 'Unknown';
+    return 'Unknown\n';
 }

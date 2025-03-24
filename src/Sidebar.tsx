@@ -1,6 +1,6 @@
 import React, { ReactElement, useContext } from 'react';
 import EditorContext from './EditorContext';
-import { StructureBaseNode, StructureContainerNode, StructureNodeType } from './types';
+import { NodeNames, StructureBaseNode, StructureContainerNode, StructureFillableNode, StructureNodeType } from './types';
 export default function Sidebar() {
     const { nodes, setActiveNodeId, activeNodeId } = useContext(EditorContext);
 
@@ -22,16 +22,18 @@ export default function Sidebar() {
 
         switch (node.type) {
             case StructureNodeType.Container:
+            case StructureNodeType.Table:
+            case StructureNodeType.TableRow:
+            case StructureNodeType.TableCell:
                 return <div key={node.id}>
-                    <div {...basicProps}>{node.id} (Container Node)</div>
-                    {(node as StructureContainerNode).children.map((child) => {
+                    <div {...basicProps}>{node.id} ({NodeNames[node.type]})</div>
+                    {(node as StructureFillableNode).children.map((child) => {
                         return getNodeElement(child, indent + 1);
                     })}
                 </div>;
             case StructureNodeType.Text:
-                return <div {...basicProps}>{node.id} (Text Node)</div>;
             case StructureNodeType.Image:
-                return <div {...basicProps}>{node.id} (Image Node)</div>;
+                return <div {...basicProps}>{node.id} ({NodeNames[node.type]})</div>;
             default:
                 return <div {...basicProps}>{node.id} (Unknown - {node.type})</div>;
         }

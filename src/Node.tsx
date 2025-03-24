@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { StructureBaseNode, StructureContainerNode, StructureDirection, StructureImageNode, StructureNodeType, StructureTextNode, StructureUpdatableKeys } from "./types";
+import { ContainerNodes, StructureBaseNode, StructureContainerNode, StructureDirection, StructureFillableNode, StructureImageNode, StructureNodeType, StructureTextNode, StructureUpdatableKeys } from "./types";
 import EditorContext from './EditorContext';
 import classnames from 'classnames';
 
@@ -18,6 +18,12 @@ export default function Node({ node }: { node: StructureBaseNode }) {
             ...styles,
             display: 'flex',
             flexDirection: constainerNode.direction === StructureDirection.Row ? 'row' : 'column',
+        };
+    } else if (ContainerNodes.includes(node.type)) {
+        const constainerNode = node as StructureFillableNode;
+        content = constainerNode.children.map(child => <Node key={child.id} node={child} />);
+        styles = {
+            ...styles,
         };
     } else if (node.type === StructureNodeType.Text) {
         const textNode = node as StructureTextNode;

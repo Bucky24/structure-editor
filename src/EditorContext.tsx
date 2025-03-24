@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react';
-import { StructureBaseNode, StructureNodeType, StructureContainerNode, StructureTextNode, StructureUpdatableKeys, StructureDirection, StructureImageNode } from './types';
+import { StructureBaseNode, StructureNodeType, StructureContainerNode, StructureTextNode, StructureUpdatableKeys, StructureDirection, StructureImageNode, ContainerNodes, StructureFillableNode } from './types';
 import { getRandomString } from './utils';
 
 const EditorContext = React.createContext<{
@@ -54,8 +54,8 @@ export function EditorProvider({ children }: PropsWithChildren) {
                 return;
             }
 
-            if (node.type === StructureNodeType.Container) {
-                applyToNode((node as StructureContainerNode).children, id, cb);
+            if (ContainerNodes.includes(node.type)) {
+                applyToNode((node as StructureFillableNode).children, id, cb);
             }
         }
     }
@@ -75,16 +75,18 @@ export function EditorProvider({ children }: PropsWithChildren) {
                 newNode = { ...newNode, textContent: '' } as StructureTextNode;
             } else if (type === StructureNodeType.Image) {
                 newNode = { ...newNode, src: '' } as StructureImageNode;
+            } else if ([StructureNodeType.Table, StructureNodeType.TableRow, StructureNodeType.TableCell].includes(type)) {
+                newNode = { ...newNode, children: [] } as StructureFillableNode;
             }
 
             if (activeNodeId) {
                 applyToNode(nodes, activeNodeId, (node: StructureBaseNode) => {
-                    if (node.type !== StructureNodeType.Container) {
+                    if (!ContainerNodes.includes(node.type)) {
                         return;
                     }
 
-                    const containerNode = node as StructureContainerNode;
-                    containerNode.children.push(newNode);
+                    const fillableNode = node as StructureFillableNode;
+                    fillableNode.children.push(newNode);
                     setNodes([...nodes]);
                 });
             } else {

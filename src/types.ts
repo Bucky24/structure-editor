@@ -2,6 +2,9 @@ export enum StructureNodeType {
     Text = "text",
     Container = "container",
     Image = "image",
+    Table = "table",
+    TableRow = "table-row",
+    TableCell = "table-cell",
 }
 
 export enum StructureUpdatableKeys {
@@ -15,6 +18,8 @@ export enum StructureUpdatableKeys {
     Styles,
     ParentClasses,
     ParentStyles,
+    Rows,
+    Cells,
 }
 
 export enum StructureDirection {
@@ -36,9 +41,12 @@ export interface StructureTextNode extends StructureBaseNode {
     textContent: string;
 }
 
-export interface StructureContainerNode extends StructureBaseNode {
-    type: StructureNodeType.Container;
+export interface StructureFillableNode extends StructureBaseNode {
     children: StructureBaseNode[];
+}
+
+export interface StructureContainerNode extends StructureFillableNode {
+    type: StructureNodeType.Container;
     direction: StructureDirection;
 }
 
@@ -49,7 +57,35 @@ export interface StructureImageNode extends StructureBaseNode {
     src: string;
 }
 
+export interface StructureTableCellNode extends StructureFillableNode {
+    type: StructureNodeType.TableCell;
+}
+
+export interface StructureTableRowNode extends StructureFillableNode {
+    type: StructureNodeType.TableRow;
+}
+
+export interface StructureTableNode extends StructureFillableNode {
+    type: StructureNodeType.Table;
+}
+
 export enum StructureSaveType {
     HTML,
     JSON,
 }
+
+export const NodeNames: { [key: string]: string } = {
+    [StructureNodeType.Container]: 'Container Node',
+    [StructureNodeType.Text]: 'Text Node',
+    [StructureNodeType.Image]: 'Image Node',
+    [StructureNodeType.Table]: 'Table Node',
+    [StructureNodeType.TableRow]: 'Table Row Node',
+    [StructureNodeType.TableCell]: 'Table Cell Node',
+};
+
+export const ContainerNodes = [
+    StructureNodeType.Container,
+    StructureNodeType.Table,
+    StructureNodeType.TableRow,
+    StructureNodeType.TableCell,
+];
