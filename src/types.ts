@@ -1,7 +1,7 @@
 export enum StructureNodeType {
-    Text,
-    Container,
-    Image,
+    Text = "text",
+    Container = "container",
+    Image = "image",
 }
 
 export enum StructureUpdatableKeys {

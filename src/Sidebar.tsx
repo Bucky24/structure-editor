@@ -22,7 +22,7 @@ export default function Sidebar() {
 
         switch (node.type) {
             case StructureNodeType.Container:
-                return <div>
+                return <div key={node.id}>
                     <div {...basicProps}>{node.id} (Container Node)</div>
                     {(node as StructureContainerNode).children.map((child) => {
                         return getNodeElement(child, indent + 1);

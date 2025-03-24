@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
 import { StructureBaseNode, StructureNodeType, StructureContainerNode, StructureTextNode, StructureUpdatableKeys, StructureDirection, StructureImageNode } from './types';
 import { getRandomString } from './utils';
 
@@ -9,6 +9,7 @@ const EditorContext = React.createContext<{
     setActiveNodeId: (nodeId: string | null) => void,
     applyToNode: (id: string, cb: (node: StructureBaseNode) => void) => void,
     updateNode: (id: string, key: StructureUpdatableKeys, value: any) => void,
+    loadJson: (json: any[]) => void,
 }>({
     nodes: [],
     activeNodeId: null,
@@ -16,12 +17,35 @@ const EditorContext = React.createContext<{
     setActiveNodeId: () => {},
     applyToNode: () => {},
     updateNode: () => {},
+    loadJson: () => {},
 });
 export default EditorContext;
 
 export function EditorProvider({ children }: PropsWithChildren) {
     const [nodes, setNodes] = useState<StructureBaseNode[]>([]);
     const [activeNodeId, setActiveNodeId] = useState<string | null>(null);
+    const [loaded, setLoaded] = useState(false);
+    
+    useEffect(() => {
+        if (loaded) {
+            const fullObj = {
+                nodes,
+                activeNodeId,
+            };
+
+            localStorage.setItem('editorState', JSON.stringify(fullObj));
+        }
+    }, [nodes, activeNodeId, loaded]);
+
+    useEffect(() => {
+        const item = localStorage.getItem('editorState');
+        if (item) {
+            const parsed = JSON.parse(item);
+            setNodes(parsed.nodes);
+            setActiveNodeId(parsed.activeNodeId);
+        }
+        setLoaded(true);
+    }, []);
 
     const applyToNode = (nodes: StructureBaseNode[], id: string, cb: (node: StructureBaseNode) => void) => {
         for (const node of nodes) {
@@ -108,7 +132,11 @@ export function EditorProvider({ children }: PropsWithChildren) {
 
                 setNodes([...nodes]);
             });
-        }
+        },
+        loadJson: (json: any[]) => {
+            // unsafe, probably need to fix this at some point
+            setNodes(json);
+        },
     };
 
     return (

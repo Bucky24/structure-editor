@@ -3,7 +3,7 @@ import EditorContext from './EditorContext';
 import { StructureNodeType, StructureSaveType } from './types';
 
 export default function Menu({ onSave }: { onSave: (type: StructureSaveType) => void }) {
-    const { createNode } = useContext(EditorContext);
+    const { createNode, loadJson } = useContext(EditorContext);
 
     return <div>
         <button onClick={() => {
@@ -26,6 +26,21 @@ export default function Menu({ onSave }: { onSave: (type: StructureSaveType) => 
         </button>
         <button onClick={() => { onSave(StructureSaveType.JSON)}}>
             Save JSON
+        </button>
+        <button onClick={() => {
+            const json = prompt("Paste here");
+            if (!json) {
+                return;
+            }
+            try {
+                const obj = JSON.parse(json);
+
+                loadJson(obj);
+            } catch (e) {
+                alert("Bad json");
+            }
+        }}>
+            Load JSON
         </button>
     </div>
 }
