@@ -50,6 +50,8 @@ export default function Sidebar() {
         border: '1px solid black',
         borderLeft: 'none',
         height: 'calc(100% - 20px)',
+        maxHeight: 'calc(100% - 20px)',
+        overflowY: 'auto',
     }}>
         <div onClick={() => {
             setActiveNodeId(null);

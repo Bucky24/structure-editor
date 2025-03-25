@@ -10,9 +10,14 @@ export default function App(): ReactNode {
         flexDirection: 'column',
         height: '100%',
     }}>
-        <Editor onSave={(type: StructureSaveType, content: string) => {
-            setContent(content);
-        }} />
+        <div style={{
+            flex: 1,
+            height: 'calc(100% - 200px)',
+        }}>
+            <Editor onSave={(type: StructureSaveType, content: string) => {
+                setContent(content);
+            }} />
+        </div>
         <div style={{
             flexBasis: 200,
             flexShrink: 0,

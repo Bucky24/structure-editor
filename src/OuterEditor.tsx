@@ -36,6 +36,7 @@ export default function OuterEditor({ onSave }: { onSave: (type: StructureSaveTy
             display: 'flex',
             flexDirection: 'row',
             flexGrow: 1,
+            height: 'calc(100% - 50px)',
         }}>
             <div style={{
                 flexShrink: 0,

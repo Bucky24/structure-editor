@@ -4,7 +4,7 @@ export default function generator(nodes: StructureBaseNode[]): string {
     //console.log(nodes);
     return nodes.map((node) => {
         const generated = generateNode(node);
-        console.log(node, generated);
+        //console.log(node, generated);
         return generated;
     }).join('');
 }
@@ -35,6 +35,9 @@ function getAttrs(attrs:{ [key: string]: string} | undefined): string {
 function generateNode(node: StructureBaseNode, indents: number = 0): string {
     const inStr = indent(indents);
     let extraAttrs = `id="${node.id}" style="${node.extraStyles ?? ''}" class="${node.extraClasses ?? ''}" ${getAttrs(node.extraAttributes)}`;
+    if (node.id === "Details Table") {
+        console.log(node, extraAttrs);
+    }
     if (node.type === StructureNodeType.Container) {
         const containerNode = node as StructureContainerNode;
         let result = `${inStr}<table ${extraAttrs}>\n${inStr}${ind}<tbody>\n`;
@@ -119,8 +122,6 @@ function generateNode(node: StructureBaseNode, indents: number = 0): string {
             extraAttrs += getAttrs(fillableNode.children[0].parentAttributes);
         }
         let result = `${inStr}<td ${extraAttrs}>\n`;
-
-        console.log(extraAttrs, node);
 
         for (const child of fillableNode.children) {
             result += generateNode(child, indents + 1);
