@@ -101,9 +101,22 @@ export default function Properties() {
                         Styles
                     </td>
                     <td>
-                        <TextField value={activeNode.extraStyles ?? ''} onChange={(value: string) => {
-                            updateNode(activeNode.id, StructureUpdatableKeys.Styles, value);
-                        }} />
+                        {(activeNode.extraStyles ?? '').split(";").map((style, index) => {
+                            return <TextField key={`style_${index}`} value={style.trim()} onChange={(value: string) => {
+                                let styleList = (activeNode.extraStyles ?? '').split(";").map((item) => item.trim());
+                                if (index >= styleList.length) {
+                                    styleList.push(value.trim());
+                                } else {
+                                    styleList[index] = value.trim();
+                                }
+                                styleList = styleList.filter((style) => style.length > 0);
+                                let joinedStyles = styleList.join(";");
+                                if (!joinedStyles.endsWith(";")) {
+                                    joinedStyles += ";";
+                                }
+                                updateNode(activeNode.id, StructureUpdatableKeys.Styles, joinedStyles);
+                            }} />
+                        })}
                     </td>
                 </tr>
                 <tr>
