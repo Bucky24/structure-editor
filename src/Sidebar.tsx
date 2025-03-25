@@ -1,9 +1,10 @@
 import React, { ReactElement, useContext } from 'react';
 import EditorContext from './EditorContext';
-import { NodeNames, StructureBaseNode, StructureContainerNode, StructureFillableNode, StructureNodeType } from './types';
+import { ContainerNodes, NodeNames, StructureBaseNode, StructureContainerNode, StructureFillableNode, StructureNodeType } from './types';
 import Dropdown from './Dropdown';
+import { v4 } from 'uuid';
 export default function Sidebar() {
-    const { nodes, setActiveNodeId, activeNodeId, deleteNode } = useContext(EditorContext);
+    const { nodes, setActiveNodeId, activeNodeId, deleteNode, applyToNode } = useContext(EditorContext);
 
     const getNodeElement = (node: StructureBaseNode, indent: number = 0): ReactElement => {
         const basicProps = {
@@ -29,7 +30,36 @@ export default function Sidebar() {
 
         const actions = <>
             {deleteButton}
-            <Dropdown items={['foo']} onClick={(item) => {}} />
+            <Dropdown items={['Duplicate','Cancel']} onClick={(item) => {
+                if (item === "Duplicate") {
+                    applyToNode(node.id, (node: StructureBaseNode, parent?: StructureBaseNode) => {
+                        if (!parent) {
+                            return;
+                        }
+
+                        if (!ContainerNodes.includes(parent.type)) {
+                            return;
+                        }
+
+                        const fullCopy = (item: any): any => {
+                            const newItem = {
+                                ...item,
+                                id: v4(),
+                            };
+                            if (newItem.children) {
+                                newItem.children = newItem.children.map(fullCopy);
+                            }
+
+                            return newItem;
+                        }
+
+                        const newItem = fullCopy(node);
+                        newItem.name = `${node.name} Copy`;
+
+                        (parent as StructureFillableNode).children.push(newItem);
+                    });
+                }
+            }} />
         </>
 
         switch (node.type) {

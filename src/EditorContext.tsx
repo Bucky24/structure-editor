@@ -96,8 +96,12 @@ export function EditorProvider({ children }: PropsWithChildren) {
                 setNodes((prevNodes) => [...prevNodes, newNode]);
             }
         },
-        applyToNode: (id: string, cb: (node: StructureBaseNode) => void) => {
-            return applyToNode(nodes, id, cb);
+        applyToNode: (id: string, cb: (node: StructureBaseNode, parent?: StructureBaseNode | null) => void) => {
+            setNodes((nodes: StructureBaseNode[]) => {
+                applyToNode(nodes, id, cb);
+
+                return [...nodes];
+            });
         },
         updateNode: (id: string, key: StructureUpdatableKeys, value: any) => {
             applyToNode(nodes, id, (node: StructureBaseNode) => {
