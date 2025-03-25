@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      uuid:
-        specifier: ^11.1.0
-        version: 11.1.0
     devDependencies:
       '@types/node':
         specifier: ^22.13.13
@@ -42,6 +38,9 @@ importers:
       typescript:
         specifier: ^5.8.2
         version: 5.8.2
+      uuid:
+        specifier: ^11.1.0
+        version: 11.1.0
       vite:
         specifier: ^6.2.3
         version: 6.2.3(@types/node@22.13.13)(terser@5.39.0)(tsx@4.19.3)

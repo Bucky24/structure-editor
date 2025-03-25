@@ -9,6 +9,7 @@ export default function generator(nodes: StructureBaseNode[]): string {
     }).join('');
 }
 
+const ind = "  ";
 function indent(indents: number): string {
     let result = "";
     for (let i=0;i<indents;i++) {
@@ -17,8 +18,6 @@ function indent(indents: number): string {
 
     return result;
 }
-
-const ind = "  ";
 
 function getAttrs(attrs:{ [key: string]: string} | undefined): string {
     if (!attrs) {
