@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { ContainerNodes, StructureBaseNode, StructureContainerNode, StructureDirection, StructureFillableNode, StructureImageNode, StructureNodeType, StructureTextNode, StructureUpdatableKeys } from "./types";
+import { ContainerNodes, StructureBaseNode, StructureContainerNode, StructureDirection, StructureFillableNode, StructureImageNode, StructureNodeType, StructureTableCellNode, StructureTextNode, StructureUpdatableKeys } from "./types";
 import EditorContext from './EditorContext';
 import classnames from 'classnames';
 
@@ -19,7 +19,39 @@ export default function Node({ node }: { node: StructureBaseNode }) {
             display: 'flex',
             flexDirection: constainerNode.direction === StructureDirection.Row ? 'row' : 'column',
         };
-    } else if (ContainerNodes.includes(node.type)) {
+    } else if (node.type === StructureNodeType.Table) {
+        const constainerNode = node as StructureFillableNode;
+        content = constainerNode.children.map(child => <Node key={child.id} node={child} />);
+        styles = {
+            ...styles,
+            display: 'table',
+        };
+    } else if (node.type === StructureNodeType.TableRow) {
+        const constainerNode = node as StructureFillableNode;
+        content = constainerNode.children.map(child => {
+            if (child.type === StructureNodeType.TableCell) {
+                return <Node key={child.id} node={child} />
+            } else {
+                const newChild = {
+                    type: StructureNodeType.TableCell,
+                    id: `${child.id} cell`,
+                    children: [child],
+                } as StructureTableCellNode;
+                return <Node key={newChild.id} node={newChild} />;
+            }
+        });
+        styles = {
+            ...styles,
+            display: 'table-row',
+        };
+    }  else if (node.type === StructureNodeType.TableCell) {
+        const constainerNode = node as StructureFillableNode;
+        content = constainerNode.children.map(child => <Node key={child.id} node={child} />);
+        styles = {
+            ...styles,
+            display: 'table-cell',
+        };
+    }else if (ContainerNodes.includes(node.type)) {
         const constainerNode = node as StructureFillableNode;
         content = constainerNode.children.map(child => <Node key={child.id} node={child} />);
         styles = {
@@ -55,6 +87,7 @@ export default function Node({ node }: { node: StructureBaseNode }) {
             'node_item',
             activeNodeId === node.id && 'active',
         )}
+        id={node.id}
     >
         {content}
     </div>

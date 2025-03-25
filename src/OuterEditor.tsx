@@ -52,7 +52,7 @@ export default function OuterEditor({ onSave }: { onSave: (type: StructureSaveTy
             <div style={{
                 flexShrink: 0,
                 flexGrow: 0,
-                flexBasis: 200,
+                flexBasis: 300,
                 height: '100%',
             }}>
                 <Sidebar />

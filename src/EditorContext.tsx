@@ -10,6 +10,7 @@ const EditorContext = React.createContext<{
     applyToNode: (id: string, cb: (node: StructureBaseNode) => void) => void,
     updateNode: (id: string, key: StructureUpdatableKeys, value: any) => void,
     loadJson: (json: any[]) => void,
+    deleteNode: (nodeId: string) => void,
 }>({
     nodes: [],
     activeNodeId: null,
@@ -18,6 +19,7 @@ const EditorContext = React.createContext<{
     applyToNode: () => {},
     updateNode: () => {},
     loadJson: () => {},
+    deleteNode: () => {},
 });
 export default EditorContext;
 
@@ -47,15 +49,15 @@ export function EditorProvider({ children }: PropsWithChildren) {
         setLoaded(true);
     }, []);
 
-    const applyToNode = (nodes: StructureBaseNode[], id: string, cb: (node: StructureBaseNode) => void) => {
+    const applyToNode = (nodes: StructureBaseNode[], id: string, cb: (node: StructureBaseNode, parentNode?: StructureBaseNode | null) => void, parentNode: StructureBaseNode | null = null) => {
         for (const node of nodes) {
             if (node.id === id) {
-                cb(node);
+                cb(node, parentNode);
                 return;
             }
 
             if (ContainerNodes.includes(node.type)) {
-                applyToNode((node as StructureFillableNode).children, id, cb);
+                applyToNode((node as StructureFillableNode).children, id, cb, node);
             }
         }
     }
@@ -138,6 +140,22 @@ export function EditorProvider({ children }: PropsWithChildren) {
         loadJson: (json: any[]) => {
             // unsafe, probably need to fix this at some point
             setNodes(json);
+        },
+        deleteNode: (nodeId: string) => {
+            let newNodes = [...nodes];
+            applyToNode(newNodes, nodeId, (node: StructureBaseNode, parent?: StructureBaseNode | null) => {
+                if (!parent) {
+                    // it's probably top level
+                    newNodes = nodes.filter((n) => n.id!== nodeId);
+                } else {
+                    if (!ContainerNodes.includes(parent.type)) {
+                        return;
+                    }
+                    const fillableNode = parent as StructureFillableNode;
+                    fillableNode.children = fillableNode.children.filter((n) => n.id !== nodeId);
+                }
+            });
+            setNodes(newNodes);
         },
     };
 

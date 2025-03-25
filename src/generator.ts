@@ -1,4 +1,4 @@
-import { StructureBaseNode, StructureContainerNode, StructureDirection, StructureFillableNode, StructureImageNode, StructureNodeType, StructureTextNode } from "./types";
+import { StructureBaseNode, StructureContainerNode, StructureDirection, StructureFillableNode, StructureImageNode, StructureNodeType, StructureTableCellNode, StructureTextNode } from "./types";
 
 export default function generator(nodes: StructureBaseNode[]): string {
     //console.log(nodes);
@@ -12,41 +12,43 @@ export default function generator(nodes: StructureBaseNode[]): string {
 function indent(indents: number): string {
     let result = "";
     for (let i=0;i<indents;i++) {
-        result += "\t";
+        result += `${ind}`;
     }
 
     return result;
 }
+
+const ind = "  ";
 
 function generateNode(node: StructureBaseNode, indents: number = 0): string {
     const inStr = indent(indents);
     const extraAttrs = `style="${node.extraStyles ?? ''}" class="${node.extraClasses ?? ''}"`;
     if (node.type === StructureNodeType.Container) {
         const containerNode = node as StructureContainerNode;
-        let result = `${inStr}<table ${extraAttrs}>\n${inStr}\t<tbody>\n`;
+        let result = `${inStr}<table ${extraAttrs}>\n${inStr}${ind}<tbody>\n`;
 
         if (containerNode.direction === StructureDirection.Row) {
-            result += `${inStr}\t\t<tr>\n`;
+            result += `${inStr}${ind}${ind}<tr>\n`;
 
             for (const child of containerNode.children) {
                 const parentExtras = `style="${child.parentStyles ?? ''}" class="${child.parentClasses ?? ''}"`;
-                result += `${inStr}\t\t\t<td ${parentExtras}>\n${generateNode(child, indents + 4)}\n${inStr}\t\t\t</td>\n`;
+                result += `${inStr}${ind}${ind}${ind}<td ${parentExtras}>\n${generateNode(child, indents + 4)}${inStr}${ind}${ind}${ind}</td>\n`;
             }
 
-            result += `${inStr}\t\t</tr>\n`;
+            result += `${inStr}${ind}${ind}</tr>\n`;
         } else if (containerNode.direction === StructureDirection.Column) {
             for (const child of containerNode.children) {
                 const parentExtras = `style="${child.parentStyles ?? ''}" class="${child.parentClasses ?? ''}"`;
-                result += `${inStr}\t\t<tr>\n${inStr}\t\t\t<td ${parentExtras}>\n${generateNode(child, indents + 4)}\n${inStr}\t\t\t</td>${inStr}\t\t</tr>\n`;
+                result += `${inStr}${ind}${ind}<tr>\n${inStr}${ind}${ind}${ind}<td ${parentExtras}>\n${generateNode(child, indents + 4)}${inStr}${ind}${ind}${ind}</td>\n${inStr}${ind}${ind}</tr>\n`;
             }
         }
 
-        result += `${inStr}\t</tbody>\n${inStr}</table>`;
+        result += `${inStr}${ind}</tbody>\n${inStr}</table>\n`;
 
         return result;
     } else if (node.type === StructureNodeType.Text) {
         const textNode = node as StructureTextNode;
-        return `${inStr}<span ${extraAttrs}>${textNode.textContent}</span>`;
+        return `${inStr}<span ${extraAttrs}>${textNode.textContent}</span>\n`;
     } else if (node.type === StructureNodeType.Image) {
         const imageNode = node as StructureImageNode;
         let result = `${inStr}<img src="${imageNode.src}" ${extraAttrs} `;
@@ -58,25 +60,39 @@ function generateNode(node: StructureBaseNode, indents: number = 0): string {
             result += `height="${imageNode.height}px" `;
         }
 
-        result += "/>";
+        result += "/>\n";
 
         return result;
     } else if (node.type === StructureNodeType.Table) {
         const fillableNode = node as StructureFillableNode;
-        let result = `${inStr}<table ${extraAttrs}>\n${inStr}\t<tbody>\n`;
+        let result = `${inStr}<table ${extraAttrs}>\n${inStr}${ind}<tbody>\n`;
 
         for (const child of fillableNode.children) {
             result += generateNode(child, indents + 2);
         }
 
-        result += `${inStr}\t</tbody>\n${inStr}</table>`;
+        result += `${inStr}${ind}</tbody>\n${inStr}</table>\n`;
         return result;
     } else if (node.type === StructureNodeType.TableRow) {
         const fillableNode = node as StructureFillableNode;
         let result = `${inStr}<tr ${extraAttrs}>\n`;
 
         for (const child of fillableNode.children) {
-            result += generateNode(child, indents + 1);
+            if (child.type === StructureNodeType.TableCell) {
+                result += generateNode(child, indents + 1);
+            } else {
+                result += generateNode({
+                    type: StructureNodeType.TableCell,
+                    id: `${child.id} cell`,
+                    children: [{
+                        ...child,
+                        extraClasses: undefined,
+                        extraStyles: undefined,
+                    }],
+                    extraStyles: child.extraStyles,
+                    extraClasses: child.extraClasses,
+                } as StructureTableCellNode, indents + 1);
+            }
         }
 
         result += `${inStr}</tr>\n`;

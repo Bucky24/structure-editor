@@ -6,6 +6,10 @@
     outline: solid red;
 }
 
+.node_item {
+    display: inline-block;
+}
+
 .node_item.active {
     outline: solid red;
 }

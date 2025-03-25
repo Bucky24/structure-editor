@@ -2,7 +2,7 @@ import React, { ReactElement, useContext } from 'react';
 import EditorContext from './EditorContext';
 import { NodeNames, StructureBaseNode, StructureContainerNode, StructureFillableNode, StructureNodeType } from './types';
 export default function Sidebar() {
-    const { nodes, setActiveNodeId, activeNodeId } = useContext(EditorContext);
+    const { nodes, setActiveNodeId, activeNodeId, deleteNode } = useContext(EditorContext);
 
     const getNodeElement = (node: StructureBaseNode, indent: number = 0): ReactElement => {
         const basicProps = {
@@ -20,20 +20,26 @@ export default function Sidebar() {
             basicProps.className += " active";
         }
 
+        const deleteButton = <button onClick={() => {
+            if (confirm("Are you sure you want to delete this?")) {
+                deleteNode(node.id);
+            }
+        }}>X</button>;
+
         switch (node.type) {
             case StructureNodeType.Container:
             case StructureNodeType.Table:
             case StructureNodeType.TableRow:
             case StructureNodeType.TableCell:
                 return <div key={node.id}>
-                    <div {...basicProps}>{node.id} ({NodeNames[node.type]})</div>
+                    <div {...basicProps}>{node.id} ({NodeNames[node.type]}) {deleteButton}</div>
                     {(node as StructureFillableNode).children.map((child) => {
                         return getNodeElement(child, indent + 1);
                     })}
                 </div>;
             case StructureNodeType.Text:
             case StructureNodeType.Image:
-                return <div {...basicProps}>{node.id} ({NodeNames[node.type]})</div>;
+                return <div {...basicProps}>{node.id} ({NodeNames[node.type]}) {deleteButton}</div>;
             default:
                 return <div {...basicProps}>{node.id} (Unknown - {node.type})</div>;
         }
