@@ -20,6 +20,8 @@ export enum StructureUpdatableKeys {
     ParentStyles,
     Rows,
     Cells,
+    Attributes,
+    ParentAttributes,
 }
 
 export enum StructureDirection {
@@ -32,8 +34,10 @@ export interface StructureBaseNode {
     id: string;
     extraClasses?: string;
     extraStyles?: string;
+    extraAttributes?: { [key: string]: string };
     parentClasses?: string;
     parentStyles?: string;
+    parentAttributes?: { [key: string]: string };
 }
 
 export interface StructureTextNode extends StructureBaseNode {

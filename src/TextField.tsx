@@ -6,6 +6,7 @@ export default function TextField({ value: initialValue, onChange}: {value: stri
     useEffect(() => {
         setValue(initialValue);
     }, [initialValue]);
+
     return <input type="text" value={value} onChange={(e) => {
         const newVal = e.target.value;
         setValue(newVal);

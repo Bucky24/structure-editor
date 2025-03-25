@@ -110,6 +110,10 @@ export function EditorProvider({ children }: PropsWithChildren) {
                     node.parentClasses = value as string;
                 } else if (key === StructureUpdatableKeys.ParentStyles) {
                     node.parentStyles = value as string;
+                } else if (key === StructureUpdatableKeys.Attributes) {
+                    node.extraAttributes = value as Record<string, string>;
+                } else if (key === StructureUpdatableKeys.ParentAttributes) {
+                    node.parentAttributes = value as Record<string, string>;
                 }
                 
                 if (node.type === StructureNodeType.Container) {

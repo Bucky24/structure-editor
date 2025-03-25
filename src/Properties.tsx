@@ -115,6 +115,19 @@ export default function Properties() {
                 </tr>
                 <tr>
                     <td>
+                        Attributes
+                    </td>
+                    <td>
+                        <TextField value={activeNode.extraAttributes ? JSON.stringify(activeNode.extraAttributes) : '{}'} onChange={(value: string) => {
+                            try {
+                                const jsonValue = JSON.parse(value);
+                                updateNode(activeNode.id, StructureUpdatableKeys.Attributes, jsonValue);
+                            } catch (error) {}
+                        }} />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         Parent Classes
                     </td>
                     <td>
@@ -130,6 +143,19 @@ export default function Properties() {
                     <td>
                         <TextField value={activeNode.parentStyles ?? ''} onChange={(value: string) => {
                             updateNode(activeNode.id, StructureUpdatableKeys.ParentStyles, value);
+                        }} />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Parent Attributes
+                    </td>
+                    <td>
+                        <TextField value={activeNode.parentAttributes ? JSON.stringify(activeNode.parentAttributes) : '{}'} onChange={(value: string) => {
+                            try {
+                                const jsonValue = JSON.parse(value);
+                                updateNode(activeNode.id, StructureUpdatableKeys.ParentAttributes, jsonValue);
+                            } catch (error) {}
                         }} />
                     </td>
                 </tr>

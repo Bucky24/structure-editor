@@ -20,9 +20,21 @@ function indent(indents: number): string {
 
 const ind = "  ";
 
+function getAttrs(attrs:{ [key: string]: string} | undefined): string {
+    if (!attrs) {
+        return "";
+    }
+    let result = "";
+    for (const key in attrs) {
+        result += ` ${key}="${attrs[key]}"`;
+    }
+
+    return result;
+}
+
 function generateNode(node: StructureBaseNode, indents: number = 0): string {
     const inStr = indent(indents);
-    const extraAttrs = `style="${node.extraStyles ?? ''}" class="${node.extraClasses ?? ''}"`;
+    let extraAttrs = `id="${node.id}" style="${node.extraStyles ?? ''}" class="${node.extraClasses ?? ''}" ${getAttrs(node.extraAttributes)}`;
     if (node.type === StructureNodeType.Container) {
         const containerNode = node as StructureContainerNode;
         let result = `${inStr}<table ${extraAttrs}>\n${inStr}${ind}<tbody>\n`;
@@ -31,14 +43,15 @@ function generateNode(node: StructureBaseNode, indents: number = 0): string {
             result += `${inStr}${ind}${ind}<tr>\n`;
 
             for (const child of containerNode.children) {
-                const parentExtras = `style="${child.parentStyles ?? ''}" class="${child.parentClasses ?? ''}"`;
+                const parentExtras = `style="${child.parentStyles ?? ''}" class="${child.parentClasses ?? ''} ${getAttrs(child.parentAttributes)}"`;
+                const parentAttributes = 
                 result += `${inStr}${ind}${ind}${ind}<td ${parentExtras}>\n${generateNode(child, indents + 4)}${inStr}${ind}${ind}${ind}</td>\n`;
             }
 
             result += `${inStr}${ind}${ind}</tr>\n`;
         } else if (containerNode.direction === StructureDirection.Column) {
             for (const child of containerNode.children) {
-                const parentExtras = `style="${child.parentStyles ?? ''}" class="${child.parentClasses ?? ''}"`;
+                const parentExtras = `style="${child.parentStyles ?? ''}" class="${child.parentClasses ?? ''} ${getAttrs(child.parentAttributes)}"`;
                 result += `${inStr}${ind}${ind}<tr>\n${inStr}${ind}${ind}${ind}<td ${parentExtras}>\n${generateNode(child, indents + 4)}${inStr}${ind}${ind}${ind}</td>\n${inStr}${ind}${ind}</tr>\n`;
             }
         }
@@ -88,9 +101,11 @@ function generateNode(node: StructureBaseNode, indents: number = 0): string {
                         ...child,
                         extraClasses: undefined,
                         extraStyles: undefined,
+                        extraAttributes: undefined,
                     }],
                     extraStyles: child.extraStyles,
                     extraClasses: child.extraClasses,
+                    extraAttributes: child.extraAttributes,
                 } as StructureTableCellNode, indents + 1);
             }
         }
@@ -99,7 +114,13 @@ function generateNode(node: StructureBaseNode, indents: number = 0): string {
         return result;
     } else if (node.type === StructureNodeType.TableCell) {
         const fillableNode = node as StructureFillableNode;
+
+        if (fillableNode.children.length === 1) {
+            extraAttrs += getAttrs(fillableNode.children[0].parentAttributes);
+        }
         let result = `${inStr}<td ${extraAttrs}>\n`;
+
+        console.log(extraAttrs, node);
 
         for (const child of fillableNode.children) {
             result += generateNode(child, indents + 1);
