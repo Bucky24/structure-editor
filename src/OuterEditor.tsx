@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Editor from './Editor';
 import EditorContext from './EditorContext';
 import Menu from './Menu';
@@ -8,9 +8,11 @@ import Properties from './Properties';
 import './styles.css';
 import generator from './generator';
 import { StructureSaveType } from './types';
+import Preview from './Preview';
 
 export default function OuterEditor({ onSave }: { onSave: (type: StructureSaveType, content: string) => void | Promise<void> }) {
     const { nodes } = useContext(EditorContext);
+    const [mode, setMode] = useState('editor');
 
     return <div style={{
         display: 'flex',
@@ -46,8 +48,21 @@ export default function OuterEditor({ onSave }: { onSave: (type: StructureSaveTy
             <div style={{
                 flexGrow: 1,
                 height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
             }}>
-                <Editor />
+                <div style={{
+                    flexShrink: 0,
+                }}>
+                    <button onClick={() => setMode('editor')}>Editor</button>
+                    <button onClick={() => setMode('preview')}>Preview</button>
+                </div>
+                <div style={{
+                    flexGrow: 1,
+                }}>
+                    {mode === 'editor' && <Editor />}
+                    {mode === 'preview' && <Preview />}
+                </div>
             </div>
             <div style={{
                 flexShrink: 0,
