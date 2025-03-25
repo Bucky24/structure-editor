@@ -8,7 +8,7 @@ export enum StructureNodeType {
 }
 
 export enum StructureUpdatableKeys {
-    Id,
+    Name,
     Direction,
     TextContent,
     Width,
@@ -32,6 +32,7 @@ export enum StructureDirection {
 export interface StructureBaseNode {
     type: StructureNodeType;
     id: string;
+    name: string;
     extraClasses?: string;
     extraStyles?: string;
     extraAttributes?: { [key: string]: string };

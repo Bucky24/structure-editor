@@ -27,18 +27,11 @@ export default function Properties() {
             <tbody>
                 <tr>
                     <td>
-                        ID
+                        Name
                     </td>
                     <td>
-                        <TextField value={activeNode.id || ''} onChange={(value: string) => {
-                            if (value === '') {
-                                value = ' ';
-                            }
-                            const oldId = activeNode.id;
-                            updateNode(activeNode.id, StructureUpdatableKeys.Id, value);
-                            if (activeNodeId === oldId) {
-                                setActiveNodeId(value);
-                            }
+                        <TextField value={activeNode.name || ''} onChange={(value: string) => {
+                            updateNode(activeNode.id, StructureUpdatableKeys.Name, value);
                         }} />
                     </td>
                 </tr>

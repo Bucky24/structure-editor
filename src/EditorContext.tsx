@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react';
 import { StructureBaseNode, StructureNodeType, StructureContainerNode, StructureTextNode, StructureUpdatableKeys, StructureDirection, StructureImageNode, ContainerNodes, StructureFillableNode } from './types';
-import { getRandomString } from './utils';
+import { v4 } from 'uuid';
 
 const EditorContext = React.createContext<{
     nodes: StructureBaseNode[],
@@ -69,7 +69,8 @@ export function EditorProvider({ children }: PropsWithChildren) {
         createNode: (type: StructureNodeType) => {
             let newNode: StructureBaseNode = {
                 type,
-                id: getRandomString(12),
+                id: v4(),
+                name: "Unnamed",
             };
             if (type === StructureNodeType.Container) {
                 newNode = { ...newNode, children: [], direction: StructureDirection.Row } as StructureContainerNode;
@@ -100,8 +101,8 @@ export function EditorProvider({ children }: PropsWithChildren) {
         },
         updateNode: (id: string, key: StructureUpdatableKeys, value: any) => {
             applyToNode(nodes, id, (node: StructureBaseNode) => {
-                if (key === StructureUpdatableKeys.Id) {
-                    node.id = value as string;
+                if (key === StructureUpdatableKeys.Name) {
+                    node.name = value as string;
                 } else if (key === StructureUpdatableKeys.Classes) {
                     node.extraClasses = value as string;
                 } else if (key === StructureUpdatableKeys.Styles) {

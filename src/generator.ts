@@ -34,7 +34,7 @@ function getAttrs(attrs:{ [key: string]: string} | undefined): string {
 
 function generateNode(node: StructureBaseNode, indents: number = 0): string {
     const inStr = indent(indents);
-    let extraAttrs = `id="${node.id}" style="${node.extraStyles ?? ''}" class="${node.extraClasses ?? ''}" ${getAttrs(node.extraAttributes)}`;
+    let extraAttrs = `id="${node.name}" style="${node.extraStyles ?? ''}" class="${node.extraClasses ?? ''}" ${getAttrs(node.extraAttributes)}`;
     if (node.id === "Details Table") {
         console.log(node, extraAttrs);
     }

@@ -32,16 +32,16 @@ export default function Sidebar() {
             case StructureNodeType.TableRow:
             case StructureNodeType.TableCell:
                 return <div key={node.id}>
-                    <div {...basicProps}>{node.id} ({NodeNames[node.type]}) {deleteButton}</div>
+                    <div {...basicProps}>{node.name} ({NodeNames[node.type]}) {deleteButton}</div>
                     {(node as StructureFillableNode).children.map((child) => {
                         return getNodeElement(child, indent + 1);
                     })}
                 </div>;
             case StructureNodeType.Text:
             case StructureNodeType.Image:
-                return <div {...basicProps}>{node.id} ({NodeNames[node.type]}) {deleteButton}</div>;
+                return <div {...basicProps}>{node.name} ({NodeNames[node.type]}) {deleteButton}</div>;
             default:
-                return <div {...basicProps}>{node.id} (Unknown - {node.type})</div>;
+                return <div {...basicProps}>{node.name} (Unknown - {node.type}) {deleteButton}</div>;
         }
     }
 
