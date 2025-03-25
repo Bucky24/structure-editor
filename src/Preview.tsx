@@ -12,8 +12,6 @@ export default function Preview() {
 
     return <div
         style={{
-            height: 'calc(100% - 20px)',
-            border: '1px solid black',
             padding: '10px',
         }}
         dangerouslySetInnerHTML={{ __html: content }}

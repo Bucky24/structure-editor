@@ -51,6 +51,7 @@ export default function OuterEditor({ onSave }: { onSave: (type: StructureSaveTy
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
+                width: 'calc(100% - 500px)',
             }}>
                 <div style={{
                     flexShrink: 0,
@@ -60,6 +61,8 @@ export default function OuterEditor({ onSave }: { onSave: (type: StructureSaveTy
                 </div>
                 <div style={{
                     flexGrow: 1,
+                    width: '100%',
+                    overflowX: 'auto',
                 }}>
                     {mode === 'editor' && <Editor />}
                     {mode === 'preview' && <Preview />}
