@@ -1,6 +1,7 @@
 import React, { ReactElement, useContext } from 'react';
 import EditorContext from './EditorContext';
 import { NodeNames, StructureBaseNode, StructureContainerNode, StructureFillableNode, StructureNodeType } from './types';
+import Dropdown from './Dropdown';
 export default function Sidebar() {
     const { nodes, setActiveNodeId, activeNodeId, deleteNode } = useContext(EditorContext);
 
@@ -26,22 +27,27 @@ export default function Sidebar() {
             }
         }}>X</button>;
 
+        const actions = <>
+            {deleteButton}
+            <Dropdown items={['foo']} onClick={(item) => {}} />
+        </>
+
         switch (node.type) {
             case StructureNodeType.Container:
             case StructureNodeType.Table:
             case StructureNodeType.TableRow:
             case StructureNodeType.TableCell:
                 return <div key={node.id}>
-                    <div {...basicProps}>{node.name} ({NodeNames[node.type]}) {deleteButton}</div>
+                    <div {...basicProps}>{node.name} ({NodeNames[node.type]}) {actions}</div>
                     {(node as StructureFillableNode).children.map((child) => {
                         return getNodeElement(child, indent + 1);
                     })}
                 </div>;
             case StructureNodeType.Text:
             case StructureNodeType.Image:
-                return <div {...basicProps}>{node.name} ({NodeNames[node.type]}) {deleteButton}</div>;
+                return <div {...basicProps}>{node.name} ({NodeNames[node.type]}) {actions}</div>;
             default:
-                return <div {...basicProps}>{node.name} (Unknown - {node.type}) {deleteButton}</div>;
+                return <div {...basicProps}>{node.name} (Unknown - {node.type}) {actions}</div>;
         }
     }
 

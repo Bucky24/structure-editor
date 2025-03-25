@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Editor from './Editor';
 import EditorContext from './EditorContext';
 import Menu from './Menu';

@@ -80,12 +80,12 @@ export enum StructureSaveType {
 }
 
 export const NodeNames: { [key: string]: string } = {
-    [StructureNodeType.Container]: 'Container Node',
-    [StructureNodeType.Text]: 'Text Node',
-    [StructureNodeType.Image]: 'Image Node',
-    [StructureNodeType.Table]: 'Table Node',
-    [StructureNodeType.TableRow]: 'Table Row Node',
-    [StructureNodeType.TableCell]: 'Table Cell Node',
+    [StructureNodeType.Container]: 'Container',
+    [StructureNodeType.Text]: 'Text',
+    [StructureNodeType.Image]: 'Image',
+    [StructureNodeType.Table]: 'Table',
+    [StructureNodeType.TableRow]: 'Table Row',
+    [StructureNodeType.TableCell]: 'Table Cell',
 };
 
 export const ContainerNodes = [
