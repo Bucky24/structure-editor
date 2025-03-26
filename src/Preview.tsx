@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import EditorContext from './EditorContext';
-import generator from './generator';
+import { StructureHtmlGenerator } from './generators/StructureHtmlGenerator';
 
 export default function Preview() {
     const [content, setContent] = useState('');
     const { nodes } = useContext(EditorContext);
 
     useEffect(() => {
-        setContent(generator(nodes));
+        setContent((new StructureHtmlGenerator).generate(nodes));
     }, [nodes]);
 
     return <div

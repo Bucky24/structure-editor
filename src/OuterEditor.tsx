@@ -6,9 +6,9 @@ import Sidebar from './Sidebar';
 import Properties from './Properties';
 
 import './styles.css';
-import generator from './generator';
 import { StructureSaveType } from './types';
 import Preview from './Preview';
+import { StructureHtmlGenerator } from './generators/StructureHtmlGenerator';
 
 export default function OuterEditor({ onSave }: { onSave: (type: StructureSaveType, content: string) => void | Promise<void> }) {
     const { nodes } = useContext(EditorContext);
@@ -25,7 +25,7 @@ export default function OuterEditor({ onSave }: { onSave: (type: StructureSaveTy
         }}>
             <Menu onSave={(type: StructureSaveType) => {
                 if (type === StructureSaveType.HTML) {
-                    const html = generator(nodes);
+                    const html = (new StructureHtmlGenerator).generate(nodes);
                     onSave(StructureSaveType.HTML, html);
                 } else if (type === StructureSaveType.JSON) {
                     onSave(StructureSaveType.JSON, JSON.stringify(nodes, null, 4));

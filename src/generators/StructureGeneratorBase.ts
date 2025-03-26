@@ -1,12 +1,4 @@
-import { ContainerNodes, StructureBaseNode, StructureFillableNode } from "../types";
-
-export type StructureGeneratedData = {
-    node: StructureBaseNode,
-    result: string,
-    parentStyles: string,
-    parentAttributes: string,
-    parentClasses: string,
-}
+import { StructureBaseNode } from "../types";
 
 export abstract class StructureGeneratorBase {
     static indent(indents: number): string {
@@ -21,19 +13,10 @@ export abstract class StructureGeneratorBase {
 
     generate(nodes: StructureBaseNode[]): string {
         return nodes.map((node) => {
-            const generated = this.generateHelper(node);
-            return generated.result;
+            const generated = this.generateNode(node);
+            return generated;
         }).join('');
     }
 
-    generateHelper(node: StructureBaseNode): StructureGeneratedData {
-        let children: StructureGeneratedData[] = [];
-        if (ContainerNodes.includes(node.type)) {
-            children = (node as StructureFillableNode).children.map((child) => this.generateHelper(child));
-        }
-
-        return this.generateNode(node, children);
-    }
-
-    abstract generateNode(node: StructureBaseNode, children: StructureGeneratedData[]): StructureGeneratedData;
+    abstract generateNode(node: StructureBaseNode): string;
 }
