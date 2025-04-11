@@ -7,9 +7,7 @@ export default function Node({ node }: { node: StructureBaseNode }) {
     const { activeNodeId, updateNode } = useContext(EditorContext);
 
     let content = null;
-    let styles: { [key: string]: string | number } = {
-        flexGrow: 1,
-    };
+    let styles: { [key: string]: string | number } = {};
 
     if (node.type === StructureNodeType.Container) {
         const constainerNode = node as StructureContainerNode;
@@ -19,13 +17,32 @@ export default function Node({ node }: { node: StructureBaseNode }) {
             display: 'flex',
             flexDirection: constainerNode.direction === StructureDirection.Row ? 'row' : 'column',
         };
+
+        return <div
+            style={styles}
+            className={classnames(
+                'node_item',
+                activeNodeId === node.id && 'active',
+            )}
+            id={node.id}
+        >
+            {content}
+        </div>;
     } else if (node.type === StructureNodeType.Table) {
         const constainerNode = node as StructureFillableNode;
         content = constainerNode.children.map(child => <Node key={child.id} node={child} />);
-        styles = {
-            ...styles,
-            display: 'table',
-        };
+        
+        return <table
+            style={styles}
+            className={classnames(
+                'node_item',
+                activeNodeId === node.id && 'active',
+            )}
+        >
+            <tbody>
+                {content}
+            </tbody>
+        </table>
     } else if (node.type === StructureNodeType.TableRow) {
         const constainerNode = node as StructureFillableNode;
         content = constainerNode.children.map(child => {
@@ -42,8 +59,15 @@ export default function Node({ node }: { node: StructureBaseNode }) {
         });
         styles = {
             ...styles,
-            display: 'table-row',
         };
+
+        return <tr
+            style={styles}
+            className={classnames(
+                'node_item',
+                activeNodeId === node.id && 'active',
+            )}
+        >{content}</tr>
     }  else if (node.type === StructureNodeType.TableCell) {
         const constainerNode = node as StructureFillableNode;
         content = constainerNode.children.map(child => <Node key={child.id} node={child} />);
@@ -51,6 +75,13 @@ export default function Node({ node }: { node: StructureBaseNode }) {
             ...styles,
             display: 'table-cell',
         };
+        return <td
+            style={styles}
+            className={classnames(
+                'node_item',
+                activeNodeId === node.id && 'active',
+            )}
+        >{content}</td>
     }else if (ContainerNodes.includes(node.type)) {
         const constainerNode = node as StructureFillableNode;
         content = constainerNode.children.map(child => <Node key={child.id} node={child} />);
@@ -59,8 +90,14 @@ export default function Node({ node }: { node: StructureBaseNode }) {
         };
     } else if (node.type === StructureNodeType.Text) {
         const textNode = node as StructureTextNode;
-        content = <textarea
-            style={{ width: '100%', height: '100%', padding: 0 }}
+        styles = {
+            ...styles,
+            width: '100%',
+            height: '100%',
+            padding: 0,
+        };
+        return <textarea
+            style={styles}
             onChange={(e) => {
                 const content = e.target.value;
                 updateNode(node.id, StructureUpdatableKeys.TextContent, content);
@@ -69,26 +106,21 @@ export default function Node({ node }: { node: StructureBaseNode }) {
         ></textarea>;
     } else if (node.type === StructureNodeType.Image) {
         const imageNode = node as StructureImageNode;
-        content = <img
-            style={{
-                width: imageNode.width ?? `${imageNode.width}px`,
-                height: imageNode.height ?? `${imageNode.height}px`,
-            }}
+
+        styles = {
+            ...styles,
+            flexGrow: 0,
+            flexShrink: 0,
+            width: imageNode.width ?? `${imageNode.width}px`,
+            height: imageNode.height ?? `${imageNode.height}px`,
+        };
+
+        return <img
+            style={styles}
             src={imageNode.src}
         />;
-        styles.flexGrow = 0;
-        styles.flexShrink = 0;
     } else {
         content = <div style={{ width: '100%', height: '100%', padding: 0 }}>Unknown type</div>
     }
-    return <div
-        style={styles}
-        className={classnames(
-            'node_item',
-            activeNodeId === node.id && 'active',
-        )}
-        id={node.id}
-    >
-        {content}
-    </div>
+    return null;
 }
