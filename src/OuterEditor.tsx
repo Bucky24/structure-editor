@@ -9,6 +9,7 @@ import './styles.css';
 import { StructureSaveType } from './types';
 import Preview from './Preview';
 import { StructureHtmlGenerator } from './generators/StructureHtmlGenerator';
+import StylePane from './StylePane';
 
 export default function OuterEditor({ onSave }: { onSave: (type: StructureSaveType, content: string) => void | Promise<void> }) {
     const { nodes } = useContext(EditorContext);
@@ -56,6 +57,7 @@ export default function OuterEditor({ onSave }: { onSave: (type: StructureSaveTy
                 <div style={{
                     flexShrink: 0,
                 }}>
+                    <button onClick={() => setMode('styles')}>Styles</button>
                     <button onClick={() => setMode('editor')}>Editor</button>
                     <button onClick={() => setMode('preview')}>Preview</button>
                 </div>
@@ -66,6 +68,7 @@ export default function OuterEditor({ onSave }: { onSave: (type: StructureSaveTy
                 }}>
                     {mode === 'editor' && <Editor />}
                     {mode === 'preview' && <Preview />}
+                    {mode === 'styles' && <StylePane />}
                 </div>
             </div>
             <div style={{

@@ -96,14 +96,9 @@ export default function Node({ node }: { node: StructureBaseNode }) {
             height: '100%',
             padding: 0,
         };
-        return <textarea
+        return <span
             style={styles}
-            onChange={(e) => {
-                const content = e.target.value;
-                updateNode(node.id, StructureUpdatableKeys.TextContent, content);
-            }}
-            value={textNode.textContent}
-        ></textarea>;
+        >{textNode.textContent}</span>;
     } else if (node.type === StructureNodeType.Image) {
         const imageNode = node as StructureImageNode;
 

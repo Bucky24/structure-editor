@@ -94,3 +94,9 @@ export const ContainerNodes = [
     StructureNodeType.TableRow,
     StructureNodeType.TableCell,
 ];
+
+export type CustomClass = {
+    name: string,
+    styles: { [style: string]: string},
+    id: string,
+}

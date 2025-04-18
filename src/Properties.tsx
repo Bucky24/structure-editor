@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import EditorContext from './EditorContext';
-import { StructureBaseNode, StructureContainerNode, StructureDirection, StructureImageNode, StructureNodeType, StructureUpdatableKeys } from './types';
+import { StructureBaseNode, StructureContainerNode, StructureDirection, StructureImageNode, StructureNodeType, StructureTextNode, StructureUpdatableKeys } from './types';
 import TextField from './TextField';
 
 export default function Properties() {
@@ -86,6 +86,16 @@ export default function Properties() {
                         </td>
                     </tr>
                 </>}
+                {activeNode.type === StructureNodeType.Text && <tr>
+                    <td>
+                        Content
+                    </td>    
+                    <td>
+                        <TextField value={(activeNode as StructureTextNode).textContent ?? ''} onChange={(value: string) => {
+                            updateNode(activeNode.id, StructureUpdatableKeys.TextContent, value);
+                        }} />
+                    </td>
+                </tr>}
                 <tr>
                     <td>
                         Classes

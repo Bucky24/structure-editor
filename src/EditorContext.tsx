@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react';
-import { StructureBaseNode, StructureNodeType, StructureContainerNode, StructureTextNode, StructureUpdatableKeys, StructureDirection, StructureImageNode, ContainerNodes, StructureFillableNode } from './types';
+import { StructureBaseNode, StructureNodeType, StructureContainerNode, StructureTextNode, StructureUpdatableKeys, StructureDirection, StructureImageNode, ContainerNodes, StructureFillableNode, CustomClass } from './types';
 import { v4 } from 'uuid';
 
 const EditorContext = React.createContext<{
@@ -11,6 +11,8 @@ const EditorContext = React.createContext<{
     updateNode: (id: string, key: StructureUpdatableKeys, value: any) => void,
     loadJson: (json: any[]) => void,
     deleteNode: (nodeId: string) => void,
+    classes: CustomClass[],
+    setClasses: (classes: CustomClass[]) => void,
 }>({
     nodes: [],
     activeNodeId: null,
@@ -20,6 +22,8 @@ const EditorContext = React.createContext<{
     updateNode: () => {},
     loadJson: () => {},
     deleteNode: () => {},
+    classes: [],
+    setClasses: () => {},
 });
 export default EditorContext;
 
@@ -27,17 +31,19 @@ export function EditorProvider({ children }: PropsWithChildren) {
     const [nodes, setNodes] = useState<StructureBaseNode[]>([]);
     const [activeNodeId, setActiveNodeId] = useState<string | null>(null);
     const [loaded, setLoaded] = useState(false);
+    const [classes, setClasses] = useState<CustomClass[]>([]);
     
     useEffect(() => {
         if (loaded) {
             const fullObj = {
                 nodes,
                 activeNodeId,
+                classes,
             };
 
             localStorage.setItem('editorState', JSON.stringify(fullObj));
         }
-    }, [nodes, activeNodeId, loaded]);
+    }, [nodes, activeNodeId, loaded, classes]);
 
     useEffect(() => {
         const item = localStorage.getItem('editorState');
@@ -45,6 +51,7 @@ export function EditorProvider({ children }: PropsWithChildren) {
             const parsed = JSON.parse(item);
             setNodes(parsed.nodes);
             setActiveNodeId(parsed.activeNodeId);
+            setClasses(parsed.classes || []);
         }
         setLoaded(true);
     }, []);
@@ -66,6 +73,8 @@ export function EditorProvider({ children }: PropsWithChildren) {
         nodes,
         activeNodeId,
         setActiveNodeId,
+        classes,
+        setClasses,
         createNode: (type: StructureNodeType) => {
             let newNode: StructureBaseNode = {
                 type,
