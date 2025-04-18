@@ -1,4 +1,9 @@
-import { StructureBaseNode } from "../types";
+import { CustomClass, StructureBaseNode } from "../types";
+
+type GenerateResult = {
+    classHtml: string,
+    bodyHtml: string,
+};
 
 export abstract class StructureGeneratorBase {
     static indent(indents: number): string {
@@ -11,12 +16,20 @@ export abstract class StructureGeneratorBase {
         return result;
     }
 
-    generate(nodes: StructureBaseNode[]): string {
-        return nodes.map((node) => {
+    generate(nodes: StructureBaseNode[], classes: CustomClass[]): GenerateResult {
+        const classHtml = this.generateClasses(classes);
+        const bodyHtml = nodes.map((node) => {
             const generated = this.generateNode(node);
             return generated;
         }).join('');
+
+        return {
+            classHtml,
+            bodyHtml,
+        }
     }
 
     abstract generateNode(node: StructureBaseNode): string;
+
+    abstract generateClasses(classes: CustomClass[]): string;
 }

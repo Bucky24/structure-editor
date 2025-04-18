@@ -4,8 +4,9 @@ import { StructureBaseNode, StructureContainerNode, StructureDirection, Structur
 import TextField from './TextField';
 
 export default function Properties() {
-    const { activeNodeId, applyToNode, updateNode, setActiveNodeId } = useContext(EditorContext);
+    const { activeNodeId, applyToNode, updateNode, classes  } = useContext(EditorContext);
     const [activeNode, setActiveNode] = useState<StructureBaseNode | null>(null);
+    const [tempCustomClass, setTempCustomClass] = useState("");
 
     useEffect(() => {
         setActiveNode(null);
@@ -101,9 +102,31 @@ export default function Properties() {
                         Classes
                     </td>
                     <td>
-                        <TextField value={activeNode.extraClasses ?? ''} onChange={(value: string) => {
-                            updateNode(activeNode.id, StructureUpdatableKeys.Classes, value);
-                        }} />
+                        {(activeNode.extraClasses ?? '').split(" ").map((customClass, index) => {
+                            if (customClass === '') return;
+                            return <div>
+                                {customClass}
+                                <span style={{ cursor: 'pointer', padding: 10 }} onClick={() => {
+                                    const newClasses = (activeNode.extraClasses ?? '').split(" ");
+                                    newClasses.splice(index, 1);
+                                    updateNode(activeNode.id, StructureUpdatableKeys.Classes, newClasses.join(" "));
+                                }}>X</span>
+                            </div>
+                        })}
+                        <select value={tempCustomClass} onChange={(e) => setTempCustomClass(e.target.value)}>
+                            <option value="">Choose</option>
+                            {classes.map((customClass) => {
+                                return <option key={`class_selector_${customClass.id}`} value={customClass.name}>{customClass.name}</option>
+                            })}
+                        </select>
+                        <button onClick={() => {
+                            if (tempCustomClass !== "") {
+                                const newClasses = (activeNode.extraClasses ?? '').split(" ");
+                                newClasses.push(tempCustomClass);
+                                updateNode(activeNode.id, StructureUpdatableKeys.Classes, newClasses.join(" "));
+                                setTempCustomClass('');
+                            }
+                        }}>Add New</button>
                     </td>
                 </tr>
                 <tr>

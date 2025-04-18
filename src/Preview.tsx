@@ -4,10 +4,11 @@ import { StructureHtmlGenerator } from './generators/StructureHtmlGenerator';
 
 export default function Preview() {
     const [content, setContent] = useState('');
-    const { nodes } = useContext(EditorContext);
+    const { nodes, classes } = useContext(EditorContext);
 
     useEffect(() => {
-        setContent((new StructureHtmlGenerator).generate(nodes));
+        const output = (new StructureHtmlGenerator).generate(nodes, classes);
+        setContent(output.classHtml + "\n" + output.bodyHtml);
     }, [nodes]);
 
     return <div
