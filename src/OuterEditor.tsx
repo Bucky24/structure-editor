@@ -12,7 +12,7 @@ import { StructureHtmlGenerator } from './generators/StructureHtmlGenerator';
 import StylePane from './StylePane';
 
 export default function OuterEditor({ onSave }: { onSave: (type: StructureSaveType, content: string) => void | Promise<void> }) {
-    const { nodes, classes } = useContext(EditorContext);
+    const { nodes, classes, elementStyles } = useContext(EditorContext);
     const [mode, setMode] = useState('editor');
 
     return <div style={{
@@ -26,10 +26,10 @@ export default function OuterEditor({ onSave }: { onSave: (type: StructureSaveTy
         }}>
             <Menu onSave={(type: StructureSaveType) => {
                 if (type === StructureSaveType.HTML) {
-                    const { classHtml, bodyHtml } = (new StructureHtmlGenerator).generate(nodes, classes);
-                    onSave(StructureSaveType.HTML, classHtml + "\n" + bodyHtml);
+                    const { style, body } = (new StructureHtmlGenerator).generate(nodes, classes, elementStyles);
+                    onSave(StructureSaveType.HTML, style + "\n" + body);
                 } else if (type === StructureSaveType.JSON) {
-                    onSave(StructureSaveType.JSON, JSON.stringify({ nodes, classes }, null, 4));
+                    onSave(StructureSaveType.JSON, JSON.stringify({ nodes, classes, elementStyles }, null, 4));
                 }
             }} />
         </div>
