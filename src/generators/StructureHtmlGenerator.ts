@@ -1,4 +1,4 @@
-import { CustomClass, StructureBaseNode, StructureContainerNode, StructureDirection, StructureFillableNode, StructureImageNode, StructureNodeType, StructureTableCellNode, StructureTextNode } from "../types";
+import { CustomClass, ElementStyle, StructureBaseNode, StructureContainerNode, StructureDirection, StructureFillableNode, StructureImageNode, StructureNodeType, StructureTableCellNode, StructureTextNode } from "../types";
 import { StructureGeneratorBase } from "./StructureGeneratorBase";
 
 const ind = "  ";
@@ -138,11 +138,17 @@ export class StructureHtmlGenerator extends StructureGeneratorBase {
         return 'Unknown\n';
     }
 
-    generateClasses(classes: CustomClass[]): string {
-        return `<style>\n${classes.map((customClass) => {
+    generateStyles(classes: CustomClass[], elementStyles: ElementStyle[]): string {
+        const classCode = classes.map((customClass) => {
             return `.${customClass.name} {\n${Object.keys(customClass.styles).map((key) => {
                 return `\t${key}: ${customClass.styles[key]}\n`;
             }).join(";\n")}\n}`; 
-        }).join("\n")}\n</style>`
+        }).join("\n");
+        const elementCode = elementStyles.map((customElement) => {
+            return `${customElement.element} {\n${Object.keys(customElement.styles).map((key) => {
+                return `\t${key}: ${customElement.styles[key]}\n`;
+            }).join(";\n")}\n}`; 
+        }).join("\n");
+        return `<style>\n${classCode}\n${elementCode}</style>`
     }
 }

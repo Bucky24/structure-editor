@@ -1,8 +1,8 @@
-import { CustomClass, StructureBaseNode } from "../types";
+import { CustomClass, ElementStyle, StructureBaseNode } from "../types";
 
 type GenerateResult = {
-    classHtml: string,
-    bodyHtml: string,
+    style: string,
+    body: string,
 };
 
 export abstract class StructureGeneratorBase {
@@ -16,20 +16,20 @@ export abstract class StructureGeneratorBase {
         return result;
     }
 
-    generate(nodes: StructureBaseNode[], classes: CustomClass[]): GenerateResult {
-        const classHtml = this.generateClasses(classes);
+    generate(nodes: StructureBaseNode[], classes: CustomClass[], elementStyles: ElementStyle[]): GenerateResult {
+        const styleHtml = this.generateStyles(classes, elementStyles);
         const bodyHtml = nodes.map((node) => {
             const generated = this.generateNode(node);
             return generated;
         }).join('');
 
         return {
-            classHtml,
-            bodyHtml,
+            style: styleHtml,
+            body: bodyHtml,
         }
     }
 
     abstract generateNode(node: StructureBaseNode): string;
 
-    abstract generateClasses(classes: CustomClass[]): string;
+    abstract generateStyles(classes: CustomClass[], elementStyles: ElementStyle[]): string;
 }
