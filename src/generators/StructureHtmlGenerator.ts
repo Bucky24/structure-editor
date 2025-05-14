@@ -39,7 +39,7 @@ export class StructureHtmlGenerator extends StructureGeneratorBase {
 
     generateNode(node: StructureBaseNode, indents: number = 0): string {
         const inStr = this.indent(indents);
-        let extraAttrs = `id="${node.name}" style="${node.extraStyles ?? ''}" class="${node.extraClasses ?? ''}" ${this.getAttrs(node.extraAttributes)}`;
+        let extraAttrs = `id="${node.id}" style="${node.extraStyles ?? ''}" class="${node.extraClasses ?? ''}" ${this.getAttrs(node.extraAttributes)}`;
         if (node.type === StructureNodeType.Container) {
             const containerNode = node as StructureContainerNode;
             let result = `${inStr}<table ${extraAttrs}>\n${inStr}${ind}<tbody>\n`;

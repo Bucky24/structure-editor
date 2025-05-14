@@ -34,7 +34,7 @@ export default function FieldedTable({ headers, data, onChange }: FieldedTablePr
                         return <th key={`cell_${index}_${header}`}>
                             <TextField value={value} onChange={(newValue) => {
                                 const newData = {...data};
-                                if (header === "_key") {
+                                if (header === "__key") {
                                     newData[newValue] = newData[key];
                                     delete newData[key];
                                 } else if (header === "__value") {
