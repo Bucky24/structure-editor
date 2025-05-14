@@ -4,10 +4,29 @@ import EditorContext from './EditorContext';
 import classnames from 'classnames';
 
 export default function Node({ node }: { node: StructureBaseNode }) {
-    const { activeNodeId, updateNode } = useContext(EditorContext);
+    const { activeNodeId, updateNode, elementStylesByElement } = useContext(EditorContext);
 
     let content = null;
     let styles: { [key: string]: string | number } = {};
+
+    let elementName = 'div';
+    if (node.type === StructureNodeType.Table) {
+        elementName = 'table';
+    } else if (node.type === StructureNodeType.TableRow) {
+        elementName = 'tr';
+    }  else if (node.type === StructureNodeType.TableCell) {
+        elementName = 'td';
+    }  else if (node.type === StructureNodeType.Text) {
+        elementName = 'span';
+    } else if (node.type === StructureNodeType.Image) {
+        elementName = 'img';
+    }
+
+    if (elementStylesByElement[elementName]) {
+        for (const key in elementStylesByElement[elementName].styles) {
+            styles[key] = elementStylesByElement[elementName].styles[key];
+        }
+    }
 
     if (node.type === StructureNodeType.Container) {
         const constainerNode = node as StructureContainerNode;

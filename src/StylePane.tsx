@@ -6,10 +6,12 @@ import TextField from './TextField';
 import FieldedTable from './FieldedTable';
 
 export default function StylePane() {
-    const { classes, setClasses } = useContext(EditorContext);
+    const { classes, setClasses, elementStyles, setElementStyles } = useContext(EditorContext);
     const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
+    const [selectedElementId, setSelectedElementId] = useState<string | null>(null);
 
     const selectedClass = classes.find((customClass) => customClass.id === selectedClassId);
+    const selectedElement = elementStyles.find((element) => element.id === selectedElementId);
 
     return <div>
         <h2>Styles</h2>
@@ -46,6 +48,32 @@ export default function StylePane() {
                         },
                     ]);
                 }}>New Class</button>
+                
+                <div onClick={() => setSelectedElementId(null)}>Element Style List</div>
+                {elementStyles.map((elementStyle) => {
+                    return <div
+                        key={`header_${elementStyle.id}`}
+                        style={{
+                            outline: elementStyle.id === selectedElementId ? '1px solid red' : '',
+                            cursor: 'pointer',
+                        }}
+                        onClick={() => {
+                            setSelectedElementId(elementStyle.id);
+                        }}
+                    >
+                        {elementStyle.element.length > 0 ? elementStyle.element : elementStyle.id}
+                    </div>
+                })}
+                <button onClick={() => {
+                    setElementStyles([
+                        ...elementStyles,
+                        {
+                            element: 'html',
+                            id: v4(),
+                            styles: {},
+                        },
+                    ]);
+                }}>New Element Style</button>
             </div>
             <div style={{
                 flexGrow: 1,
@@ -78,6 +106,37 @@ export default function StylePane() {
                             }
 
                             setClasses(newClasses);
+                        }}
+                    />
+                </div>}
+                {selectedElement && <div>
+                    <h2>Class {selectedElement.element} ({selectedElement.id})</h2>
+                    <div>
+                        <span>Element</span>
+                        <TextField value={selectedElement.element} onChange={(val) => {
+                            const newItems = [...elementStyles];
+                            for (const customItem of newItems) {
+                                if (customItem.id === selectedElementId) {
+                                    customItem.element = val;
+                                }
+                            }
+
+                            setElementStyles(newItems);
+                        }} />
+                    </div>
+                    <h2>Styles</h2>
+                    <FieldedTable
+                        headers={{__key: 'Style', __value: 'Value' }}
+                        data={selectedElement.styles}
+                        onChange={(newData) => {
+                            const newItems = [...elementStyles];
+                            for (const customItem of newItems) {
+                                if (customItem.id === selectedElementId) {
+                                    customItem.styles = newData;
+                                }
+                            }
+
+                            setElementStyles(newItems);
                         }}
                     />
                 </div>}

@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react';
-import { StructureBaseNode, StructureNodeType, StructureContainerNode, StructureTextNode, StructureUpdatableKeys, StructureDirection, StructureImageNode, ContainerNodes, StructureFillableNode, CustomClass } from './types';
+import { StructureBaseNode, StructureNodeType, StructureContainerNode, StructureTextNode, StructureUpdatableKeys, StructureDirection, StructureImageNode, ContainerNodes, StructureFillableNode, CustomClass, ElementStyle } from './types';
 import { v4 } from 'uuid';
 
 const EditorContext = React.createContext<{
@@ -13,6 +13,9 @@ const EditorContext = React.createContext<{
     deleteNode: (nodeId: string) => void,
     classes: CustomClass[],
     setClasses: (classes: CustomClass[]) => void,
+    elementStyles: ElementStyle[],
+    setElementStyles: (styles: ElementStyle[]) => void,
+    elementStylesByElement: { [element: string]: ElementStyle };
 }>({
     nodes: [],
     activeNodeId: null,
@@ -24,6 +27,9 @@ const EditorContext = React.createContext<{
     deleteNode: () => {},
     classes: [],
     setClasses: () => {},
+    elementStyles: [],
+    setElementStyles: () => {},
+    elementStylesByElement: {},
 });
 export default EditorContext;
 
@@ -32,6 +38,8 @@ export function EditorProvider({ children }: PropsWithChildren) {
     const [activeNodeId, setActiveNodeId] = useState<string | null>(null);
     const [loaded, setLoaded] = useState(false);
     const [classes, setClasses] = useState<CustomClass[]>([]);
+    const [elementStyles, setElementStyles] = useState<ElementStyle[]>([]);
+    const [elementStylesByElement, setElementStylesByElement] = useState<{ [element: string]: ElementStyle}>({});
     
     useEffect(() => {
         if (loaded) {
@@ -39,11 +47,21 @@ export function EditorProvider({ children }: PropsWithChildren) {
                 nodes,
                 activeNodeId,
                 classes,
+                elementStyles,
             };
 
             localStorage.setItem('editorState', JSON.stringify(fullObj));
         }
-    }, [nodes, activeNodeId, loaded, classes]);
+    }, [nodes, activeNodeId, loaded, classes, elementStyles]);
+
+    useEffect(() => {
+        setElementStylesByElement(elementStyles.reduce((obj, style) => {
+            return {
+                ...obj,
+                [style.element]: style,
+            }
+        }, {}));
+    }, [elementStyles]);
 
     useEffect(() => {
         const item = localStorage.getItem('editorState');
@@ -52,6 +70,7 @@ export function EditorProvider({ children }: PropsWithChildren) {
             setNodes(parsed.nodes);
             setActiveNodeId(parsed.activeNodeId);
             setClasses(parsed.classes || []);
+            setElementStyles(parsed.elementStyles || []);
         }
         setLoaded(true);
     }, []);
@@ -75,6 +94,9 @@ export function EditorProvider({ children }: PropsWithChildren) {
         setActiveNodeId,
         classes,
         setClasses,
+        elementStyles,
+        setElementStyles,
+        elementStylesByElement,
         createNode: (type: StructureNodeType) => {
             let newNode: StructureBaseNode = {
                 type,
@@ -102,6 +124,7 @@ export function EditorProvider({ children }: PropsWithChildren) {
                     setNodes([...nodes]);
                 });
             } else {
+                console.log(nodes);
                 setNodes((prevNodes) => [...prevNodes, newNode]);
             }
         },

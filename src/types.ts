@@ -100,3 +100,9 @@ export type CustomClass = {
     styles: { [style: string]: string},
     id: string,
 }
+
+export type ElementStyle = {
+    element: string,
+    styles: { [style: string]: string},
+    id: string,
+}
